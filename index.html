@@ -108,9 +108,9 @@
             width: 100%;
         }
 
-        /* 햄버거 버튼 스타일 (기본적으로 숨김) */
+        /* 햄버거 버튼 기본 스타일 */
         .hamburger {
-            display: none;
+            display: block;
             background: none;
             border: none;
             font-size: 1.8rem;
@@ -118,20 +118,70 @@
             cursor: pointer;
             padding: 0 5px;
             z-index: 1001;
+            margin-left: 1.5rem;
         }
 
         .mobile-header-title {
             display: none;
         }
 
-        /* 반응형: 스마트폰 모바일 화면 (768px 이하) */
-        @media (max-width: 768px) {
-            .hamburger {
-                display: block;
+        /* -------------------------------------------
+           PC (컴퓨터 화면: 769px 이상)
+        ------------------------------------------- */
+        @media (min-width: 769px) {
+            .desktop-links {
+                display: flex !important;
             }
 
-            .nav-links {
-                display: none; /* 기본 숨김 */
+            /* 드롭다운 형태의 햄버거 메인 메뉴 */
+            .mobile-dropdown {
+                display: none;
+                position: absolute;
+                top: 100%;
+                right: 2rem;
+                background-color: var(--card-bg);
+                border: 1px solid var(--gold-color);
+                flex-direction: column;
+                padding: 1.5rem;
+                gap: 1rem;
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+                border-radius: 4px;
+            }
+
+            .mobile-dropdown.active {
+                display: flex;
+            }
+
+            .mobile-dropdown .mobile-header-title {
+                display: block;
+                text-align: center;
+                font-size: 1.1rem;
+                font-weight: 700;
+                color: var(--dark-color);
+                padding-bottom: 0.8rem;
+                border-bottom: 1px dashed var(--gold-color);
+                margin-bottom: 0.5rem;
+            }
+
+            .mobile-dropdown .mobile-menu-row {
+                display: flex;
+                flex-direction: column;
+                gap: 0.6rem;
+                align-items: center;
+                list-style: none;
+            }
+        }
+
+        /* -------------------------------------------
+           모바일 (스마트폰 화면: 768px 이하)
+        ------------------------------------------- */
+        @media (max-width: 768px) {
+            .desktop-links {
+                display: none !important;
+            }
+
+            .mobile-dropdown {
+                display: none;
                 position: absolute;
                 top: 100%;
                 left: 0;
@@ -144,7 +194,7 @@
                 box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
             }
 
-            .nav-links.active {
+            .mobile-dropdown.active {
                 display: flex;
             }
 
@@ -167,6 +217,7 @@
                 align-items: center;
                 gap: 0.4rem;
                 font-size: 0.88rem;
+                list-style: none;
             }
 
             .mobile-menu-row li {
@@ -184,6 +235,9 @@
 
             .mobile-menu-row a {
                 padding: 4px 6px;
+                text-decoration: none;
+                color: var(--dark-color);
+                font-weight: 600;
             }
         }
 
@@ -213,7 +267,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* 금빛 기계 제단 히어로 배경 */
+        /* 히어로 배경 */
         .hero-banner {
             position: relative;
             border: 1px solid var(--gold-color);
@@ -568,17 +622,25 @@
                 <span class="logo-mark">⚙</span> 세계의 진리와 자비의 강혜원교
             </a>
 
-            <!-- 모바일 햄버거 버튼 -->
-            <button class="hamburger" id="hamburger-btn" onclick="toggleMenu()" aria-label="메뉴 열기">☰</button>
+            <div style="display: flex; align-items: center;">
+                <!-- PC (컴퓨터) 상단 일반 메뉴 -->
+                <ul class="nav-links desktop-links">
+                    <li><a href="#intro" class="nav-item active" onclick="switchTab('intro')">강혜원교</a></li>
+                    <li><a href="#history" class="nav-item" onclick="switchTab('history')">강혜원교의 역사</a></li>
+                    <li><a href="#achieve" class="nav-item" onclick="switchTab('achieve')">신 강혜원의 위대한 업적</a></li>
+                    <li><a href="#community" class="nav-item" onclick="switchTab('community')">신도 커뮤니티</a></li>
+                </ul>
 
-            <!-- 메뉴 영역 -->
-            <div class="nav-links" id="nav-links">
-                <!-- 스마트폰 드롭다운 상단 타이틀 -->
+                <!-- 우측 햄버거 버튼 (PC, 모바일 공통 표시) -->
+                <button class="hamburger" id="hamburger-btn" onclick="toggleMenu()" aria-label="메뉴 열기">☰</button>
+            </div>
+
+            <!-- 햄버거 버튼 클릭 시 펼쳐지는 드롭다운 메뉴 영역 -->
+            <div class="mobile-dropdown" id="mobile-dropdown">
                 <div class="mobile-header-title">
                     ⚙ 세계의 진리와 자비의 강혜원교
                 </div>
 
-                <!-- 메뉴 목록 (모바일 시 | 로 구분) -->
                 <ul class="mobile-menu-row">
                     <li><a href="#intro" class="nav-item active" onclick="switchTab('intro')">강혜원교</a></li>
                     <li><a href="#history" class="nav-item" onclick="switchTab('history')">강혜원교의 역사</a></li>
@@ -813,19 +875,19 @@
 
         /* 햄버거 토글 함수 */
         function toggleMenu() {
-            const navLinks = document.getElementById('nav-links');
+            const dropdown = document.getElementById('mobile-dropdown');
             const hamburgerBtn = document.getElementById('hamburger-btn');
             
-            navLinks.classList.toggle('active');
+            dropdown.classList.toggle('active');
 
-            if (navLinks.classList.contains('active')) {
+            if (dropdown.classList.contains('active')) {
                 hamburgerBtn.innerText = '✕';
             } else {
                 hamburgerBtn.innerText = '☰';
             }
         }
 
-        /* 탭 이동 함수 (이동 후 메뉴 자동 닫기 포함) */
+        /* 탭 이동 함수 */
         function switchTab(tabId) {
             const tabs = document.querySelectorAll('.tab-content');
             const navs = document.querySelectorAll('.nav-item');
@@ -833,7 +895,7 @@
             tabs.forEach(tab => tab.classList.remove('active'));
             
             navs.forEach(nav => {
-                if(nav.getAttribute('onclick').includes(tabId)) {
+                if(nav.getAttribute('onclick') && nav.getAttribute('onclick').includes(tabId)) {
                     nav.classList.add('active');
                 } else {
                     nav.classList.remove('active');
@@ -850,9 +912,9 @@
                 fab.style.display = 'none';
             }
 
-            // 모바일 메뉴가 열려있을 경우 메뉴 항목 클릭 시 메뉴 닫기
-            const navLinks = document.getElementById('nav-links');
-            if(navLinks.classList.contains('active')) {
+            // 모바일/드롭다운 메뉴가 열려있다면 클릭 시 자동 닫기
+            const dropdown = document.getElementById('mobile-dropdown');
+            if(dropdown && dropdown.classList.contains('active')) {
                 toggleMenu();
             }
 
